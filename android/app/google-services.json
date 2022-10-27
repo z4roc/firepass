@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "766252380168",
+    "project_id": "firepass-78e13",
+    "storage_bucket": "firepass-78e13.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766252380168:android:362d1920bc4047790561bd",
+        "android_client_info": {
+          "package_name": "com.example.firepass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "766252380168-qe71emd95ekscbude463ucr200n5adas.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB1fxudiFrgifBnrtDJIYjck1aMRHPw_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766252380168-qe71emd95ekscbude463ucr200n5adas.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

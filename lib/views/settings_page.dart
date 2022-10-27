@@ -10,7 +10,14 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        leading: IconButton(onPressed: (){
+          Navigator.of(context).pop();
+        },
+        icon: const Icon(Icons.arrow_back_ios_new)),
+      ),
     );
   }
 }
