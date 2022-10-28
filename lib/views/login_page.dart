@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       width: double.infinity,
       color: const Color.fromARGB(255, 54, 57, 63),
       child: Column(children: [
-        const SizedBox(height: 190,),
+        const SizedBox(height: 120,),
         const Text(
           'Sign in',
            style: TextStyle(
@@ -65,9 +65,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        const SizedBox(height: 30,),
+        const SizedBox(height: 20,),
         ElevatedButton(onPressed: signIn, child: const Text('Login')),
-        const SizedBox(height: 10,),
+        const SizedBox(height: 5,),
         TextButton(
           onPressed: (){
             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
@@ -81,10 +81,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future signIn() async {
-    showDialog(
+    /*showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()));
+      builder: (context) => const Center(child: CircularProgressIndicator()));*/
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -95,6 +95,6 @@ class _LoginPageState extends State<LoginPage> {
       print(e);
     }
 
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    //navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
