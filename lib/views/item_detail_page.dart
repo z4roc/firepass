@@ -3,38 +3,58 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firepass/main.dart';
 import 'package:firepass/utils.dart';
 import 'package:flutter/material.dart';
+import '../models/account_model.dart';
 
-class AddPage extends StatefulWidget {
-  const AddPage({super.key});
+class ItemDetailPage extends StatefulWidget {
+  final Account selectedAccount;
 
+  const ItemDetailPage({super.key, required this.selectedAccount});
   @override
-  State<AddPage> createState() => _AddPageState();
+  State<ItemDetailPage> createState() => _ItemDetailPageState();
 }
 
-class _AddPageState extends State<AddPage> {
-
+class _ItemDetailPageState extends State<ItemDetailPage> {
+  final typeController = TextEditingController();
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
-  final typeController = TextEditingController();
   final descriptionController = TextEditingController();
   final websiteController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    websiteController.text = 'https://';
+    final account = widget.selectedAccount;
+    typeController.text = account.type;
+    nameController.text = account.name;
+    passwordController.text = account.password;
+    descriptionController.text = account.description;
+    websiteController.text = account.website;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Account'),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        height: double.infinity,
-        width: double.infinity,
-        color: const Color.fromARGB(255, 54, 57, 63),
-        child: SingleChildScrollView(
-          child: Column(
-          children: [
-            const SizedBox(height: 120,),
+        title: const Text('Account'),
+        backgroundColor: const Color.fromARGB(255, 32, 34, 37),
+        actions: [
+          IconButton(onPressed: () {
+            saveAccount(account.id);
+            navigatorKey.currentState!.pop();
+            Utils.showSnackBar('${account.type} Account ${account.name} updated', SnackBarType.success);
+          }, icon: const Icon(Icons.save_sharp)),
+        ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 54, 57, 63),
+        body: Container(
+          padding: const EdgeInsets.all(10),
+          height: double.infinity,
+          width: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40,),
+                Image(image: 
+                 NetworkImage('https://www.google.com/s2/favicons?sz=64&domain_url=${account.website.split('//')[1]}'),
+                 height: 75,),
+                const SizedBox(height: 30,),
             TextFormField(
               controller: nameController,
               decoration: InputDecoration(
@@ -94,65 +114,27 @@ class _AddPageState extends State<AddPage> {
                 borderRadius: BorderRadius.circular(10),
                ),
               )
-            ),
-            const SizedBox(height: 30,),
-            ElevatedButton(
-                onPressed: () async {
-                if(await createUser(
-                  name: nameController.text,
-                  password: passwordController.text,
-                  type: typeController.text, 
-                  description: descriptionController.text, 
-                  website: websiteController.text
-                )) {
-                  Utils.showSnackBar('Account created', SnackBarType.success);
-                  navigatorKey.currentState!.pop();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(500, 50), 
-                backgroundColor: const Color.fromARGB(255, 88, 101, 242),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-                )
               ),
-              child: const Text('Add Account'),
-            )
-          ],
+
+              ],
+            ),
+          )
         ),
-        )
-      ),
-    );
+      );
   }
 
-  Future<bool> createUser(
-    {
-      required String name,
-      required String password,
-      required String type,
-      required String description,
-      required String website
-    }
-  ) async {
-    if(Uri.tryParse(website) == null) {
-      Utils.showSnackBar('Invalid URL entered', SnackBarType.error);
-      return false;
-    }
-    final user = FirebaseAuth.instance.currentUser!;
+  Future saveAccount(String accountId) async {
     final userdoc = FirebaseFirestore.instance
-      .collection(user.uid)
-      .doc();
-
-    final data = {
-      'id': userdoc.id,
-      'name': name,
-      'password': password,
-      'type': type,
-      'description': description,
-      'website': website
-    };
-
-    await userdoc.set(data);
-    return true;
+      .collection(FirebaseAuth.instance.currentUser!.uid)
+      .doc(accountId);
+    
+    userdoc.update({
+      'id': accountId,
+      'name': nameController.text,
+      'password': passwordController.text,
+      'type': typeController.text,
+      'description': descriptionController.text,
+      'website': websiteController.text
+    });
   }
 }

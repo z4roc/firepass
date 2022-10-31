@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
  class Account {
+  String id;
   final String name;
   final String password;
   final String type;
@@ -8,14 +7,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
   final String website;
 
   Account({
+    this.id = '',
     required this.name,
     required this.password,
     required this.type,
     required this.description,
     required this.website,
-    });
+  });
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'name': name,
     'password': password,
     'type': type,
@@ -24,6 +25,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
   };
 
   static Account fromJson(Map<String, dynamic> json) => Account(
+    id: json['id'],
     name: json['name'],
     password: json['password'],
     type: json['type'],

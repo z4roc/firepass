@@ -1,7 +1,9 @@
 import 'package:firepass/main.dart';
+import 'package:firepass/utils.dart';
 import 'package:firepass/views/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,10 +32,13 @@ class _LoginPageState extends State<LoginPage> {
       height: double.infinity,
       width: double.infinity,
       color: const Color.fromARGB(255, 54, 57, 63),
-      child: Column(children: [
+      child: SingleChildScrollView(
+        child:  Column(children: [
         const SizedBox(height: 120,),
+        Image.asset('images/blue.png', height: 100),
+        const SizedBox(height: 10,),
         const Text(
-          'Sign in',
+          'Firepass',
            style: TextStyle(
             color: Colors.white,
             fontSize: 30,
@@ -43,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 60,),
         TextFormField(
           controller: emailController,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'E-Mail',
             prefixIcon: const Icon(Icons.person),
@@ -65,26 +71,45 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        const SizedBox(height: 20,),
-        ElevatedButton(onPressed: signIn, child: const Text('Login')),
+        const SizedBox(height: 30,),
+        ElevatedButton(
+          onPressed: signIn,
+          style: ElevatedButton.styleFrom(
+            fixedSize: const Size(350, 50),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+            )
+          ),  
+          child: const Text('Sign in', style: TextStyle(fontSize: 18),),          
+        ),
         const SizedBox(height: 5,),
         TextButton(
           onPressed: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+            Navigator.of(context).push(PageTransition(
+              child: const RegisterPage(),
+              type: PageTransitionType.bottomToTop,
+              duration: const Duration(milliseconds: 400),
+              reverseDuration: const Duration(milliseconds: 400)
+              )
+            );
+
+            /*MaterialPageRoute(builder: (BuildContext context) {
               return const RegisterPage();
-            }));
+            })*/
           }, 
           child: const Text('No account? Register now')
         )
       ]),
+      )
     );
   }
 
   Future signIn() async {
-    /*showDialog(
+    showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()));*/
+      builder: (context) => const Center(child: CircularProgressIndicator()));
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -92,9 +117,9 @@ class _LoginPageState extends State<LoginPage> {
       password: passwordController.text.trim()
       );
     } on FirebaseAuthException catch(e) {
-      print(e);
+      Utils.showSnackBar(e.message, SnackBarType.error);
     }
 
-    //navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
